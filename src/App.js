@@ -15,14 +15,14 @@ class App extends Component {
 		reponames: []
 	};
 
-	getUser = (e) => {
+	getUser = async (e) => {
 		e.preventDefault();
 		const user = e.target.elements.username.value;
 		this.setState({ user: user });
-		axios.get(`https://api.github.com/users/${user}`).then((res) => {
+		await axios.get(`https://api.github.com/users/${user}`).then((res) => {
 			this.setState({ repos: res.data.public_repos, avatar: res.data.avatar_url });
 		});
-		axios.get(`https://api.github.com/users/${user}/repos`).then((res) => {
+		await axios.get(`https://api.github.com/users/${user}/repos`).then((res) => {
 			const data = res.data;
 			console.log(data);
 			this.setState({ reponames: data.map((i) => i.name) });
@@ -50,7 +50,7 @@ class App extends Component {
 				<UserForm getUser={this.getUser} />
 				<ul style={this.ulStyle}>
 					{this.state.reponames.map((i, index) => (
-						<div class="ui items header divider">
+						<div className="ui items header divider">
 							<li key={index}>
 								<a href={`https://github.com/${this.state.user}/${i}`} target="_blank">
 									{i}

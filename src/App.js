@@ -35,7 +35,9 @@ class App extends Component {
 				<header className="App-header">
 					<h1 className="App-title">
 						{this.state.user ? (
-							<img src={this.state.avatar} width={'100px'} style={{ paddingRight: '20px' }} />
+							<a href={`https://github.com/${this.state.user}`} target="_blank">
+								<img src={this.state.avatar} width={'100px'} style={{ paddingRight: '20px' }} />
+							</a>
 						) : null}
 						{!this.state.user ? (
 							'HTTP Calls in React'

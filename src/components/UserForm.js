@@ -5,7 +5,7 @@ const UserForm = (props) => {
 	return (
 		<form onSubmit={props.getUser}>
 			<input style={{ margin: '20px auto', display: 'block' }} type="text" name="username" />
-			<button class="ui secondary button"> Submit</button>
+			<button className="ui secondary button"> Submit</button>
 		</form>
 	);
 };

@@ -1,28 +1,65 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import UserForm from './components/UserForm';
+import axios from 'axios';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+	ulStyle = {
+		listStyleType: 'none',
+		padding: 0
+	};
+
+	state = {
+		repos: null,
+		user: '',
+		reponames: []
+	};
+
+	getUser = (e) => {
+		e.preventDefault();
+		const user = e.target.elements.username.value;
+		this.setState({ user: user });
+		axios.get(`https://api.github.com/users/${user}`).then((res) => {
+			this.setState({ repos: res.data.public_repos, avatar: res.data.avatar_url });
+		});
+		axios.get(`https://api.github.com/users/${user}/repos`).then((res) => {
+			const data = res.data;
+			console.log(data);
+			this.setState({ reponames: data.map((i) => i.name) });
+		});
+	};
+
+	render() {
+		return (
+			<div className="App">
+				<header className="App-header">
+					<h1 className="App-title">
+						{this.state.user ? (
+							<img src={this.state.avatar} width={'100px'} style={{ paddingRight: '20px' }} />
+						) : null}
+						{!this.state.user ? (
+							'HTTP Calls in React'
+						) : (
+							`${this.state.user} has ${this.state.repos} repos 
+							`
+						)}
+					</h1>
+				</header>
+				<UserForm getUser={this.getUser} />
+				<ul style={this.ulStyle}>
+					{this.state.reponames.map((i, index) => (
+						<div class="ui items header divider">
+							<li key={index}>
+								<a href={`https://github.com/${this.state.user}/${i}`} target="_blank">
+									{i}
+								</a>
+							</li>
+						</div>
+					))}
+				</ul>
+			</div>
+		);
+	}
 }
 
 export default App;
